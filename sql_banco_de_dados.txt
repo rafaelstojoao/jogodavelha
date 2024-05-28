@@ -1,0 +1,13 @@
+create database  jogodavelha;
+
+use jogodavelha;
+
+create table partida(
+	idPartida int primary key AUTO_INCREMENT,
+    nomeJogador varchar(60) not null,
+    timeJogador char not null,
+    resultadoJogo varchar(10),
+    qtdJogadas int,
+    dataPartida datetime DEFAULT CURRENT_TIMESTAMP
+
+);
