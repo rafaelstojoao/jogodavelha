@@ -1,15 +1,13 @@
 package com.fai.jogodavelha;
 
-
-
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-
-
-import  java.util.Random;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.Random;
 import java.util.Scanner;
+import java.sql.Date;
+
 
 /**
  *
@@ -84,5 +82,38 @@ public class Principal {
             tab.imprimeTabuleiro();
             jogadas++;
         }
+        
+        String resultadoPartida = tab.verificaVitoria() ? (quemjoga == 1 ? "Computador" : "Jogador") : "Empate";
+        
+        // Conectar ao banco de dados e inserir dados da partida
+        salvarDadosPartida(j1.nome, tab.timeJogador, resultadoPartida, jogadas);
+
+        leitor.close();
     }   
+
+    public static void salvarDadosPartida(String nomeJogador, String timeJogador, String resultadoPartida, int quantJogadas) {
+        String url = "jdbc:mysql://localhost:3306/jogo_da_velha"; // Substitua pelo URL do seu banco de dados
+        String usuario = "root"; // Substitua pelo seu usuário do banco de dados
+        String senha = ""; // Substitua pela sua senha do banco de dados
+
+        String sql = "INSERT INTO partida (nome_Jogador, time_Jogador, resultado_Partida, quant_Jogadas, data_Partida) VALUES (?, ?, ?, ?, ?)";
+
+        try (Connection conn = DriverManager.getConnection(url, usuario, senha);
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, nomeJogador);
+            pstmt.setString(2, timeJogador);
+            pstmt.setString(3, resultadoPartida);
+            pstmt.setInt(4, quantJogadas);
+            pstmt.setDate(5, new Date(System.currentTimeMillis()));
+
+            pstmt.executeUpdate();
+            System.out.println("Dados da partida salvos com sucesso!");
+
+        } catch (SQLException e) {
+            System.out.println("Erro ao salvar dados da partida: " + e.getMessage());
+        }
+    }
 }
+
+

@@ -20,12 +20,21 @@ public class JogoDaVelha {
        this.tabulero[linha][coluna] = time;
     }
     
-    public void imprimeTabuleiro(){
-        for (int i = 0; i < 3; i++) {
-            System.out.println(this.tabulero[i][0]+" | "+this.tabulero[i][1]+" | "+this.tabulero[i][2]);
-            System.out.println("----------------------------");
+   public void imprimeTabuleiro() {
+    for (int i = 0; i < 3; i++) {
+        for (int j = 0; j < 3; j++) {
+            if (j == 2) {
+                System.out.print(this.tabulero[i][j]);
+            } else {
+                System.out.print(this.tabulero[i][j] + " | ");
+            }
+        }
+        System.out.println();
+        if (i < 2) {
+            System.out.println("---------");
         }
     }
+}
     
     public boolean verificaVitoria(){
         for (int i = 0; i < 3; i++) { // verifica linhas
